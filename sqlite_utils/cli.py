@@ -89,7 +89,7 @@ def cli():
     "path",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, allow_dash=False),
     required=True,
-)>
+)
 @click.option(
     "--fts4", help="Just show FTS4 enabled tables", default=False, is_flag=True
 )
