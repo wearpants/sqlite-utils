@@ -89,7 +89,7 @@ def cli():
     "path",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, allow_dash=False),
     required=True,
-)
+)>
 @click.option(
     "--fts4", help="Just show FTS4 enabled tables", default=False, is_flag=True
 )
@@ -631,6 +631,11 @@ def insert_upsert_options(fn):
         fn = decorator(fn)
     return fn
 
+def try_json_loads(s):
+    try:
+        return json.loads(s)
+    except Exception:
+        return None
 
 def insert_upsert_implementation(
     path,
@@ -671,7 +676,7 @@ def insert_upsert_implementation(
     else:
         try:
             if nl:
-                docs = (json.loads(line) for line in json_file)
+                docs = (d for d in (try_json_loads(line) for line in json_file) if d is not None)
             else:
                 docs = json.load(json_file)
                 if isinstance(docs, dict):
